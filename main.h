@@ -6,7 +6,7 @@
 #include <string.h>
 #include  <unistd.h>
 #include <sys/wait.h>
-#include <errorno.h>
+#include <errno.h>
 #define MAX_INPUT_LENGTH 256
 
 #endif
