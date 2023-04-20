@@ -10,7 +10,7 @@ this is a simple unix command line interpreter, also know as a shell, implemente
 - Handle end of file (Ctrl+D) condition to exit gracefully.
 Display error message for commands not found.
 
-##USAGE
+## USAGE
 1. Compile the source code using a C compiler, such as GCC: gcc main.c -o simple_shell
 2. Run the compiled executable: ./simple_shell
 3. the shell will display a promot ('($)' by default) and wait for the user to type a command.
@@ -21,6 +21,6 @@ Display error message for commands not found.
 ## LIMITATION
 
 ## LICENSE
-
+This project is realesed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 ## ACKNOWLEDGEMENTS
 this project is based on the the requirements specified in a prompt for simple shell project in ALX 
