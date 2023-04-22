@@ -8,5 +8,6 @@
 #include <sys/wait.h>
 #include <errorno.h>
 #define MAX_INPUT_LENGTH 256
+int my_getline(char *buffer, int buflen);
 
 #endif
