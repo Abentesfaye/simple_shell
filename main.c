@@ -11,47 +11,52 @@
 int main()
 {
     char user_input[MAX_INPUT_LENGTH];
-    pid_d pid;
+    pid_t pid;
     int status;
 
     while (1)
     {
-        /* display promot*/
-        printf("$ ");
+        /* display prompt */
+        printf("($) ");
+        fflush(stdout);  /* Add fflush(stdout) to flush the output buffer*/
+
         fgets(user_input, MAX_INPUT_LENGTH, stdin);
 
-        /* check for end of file condition (Ctrl+D)*/
+        /* check for end of file condition (Ctrl+D) */
         if (feof(stdin))
         {
-            printf("Exiting...");
             break;
         }
 
-        /*Remove newLine character from user input*/
+        /*Remove new line character from user input*/
         user_input[strcspn(user_input, "\n")] = '\0';
 
-        /* Fork a new process*/
-
+        /* Fork a new process */
         pid = fork();
 
         if (pid < 0)
         {
-            perror("Error: Fork faild");
+            perror("Error: Fork failed");
             exit(EXIT_FAILURE);
         }
         else if (pid == 0)
         {
-            /*child process*/
+            /* child process */
+            if (strcmp(user_input, "") == 0)
+            {
+                /* If user input is empty, exit without executing any command */
+                exit(EXIT_SUCCESS);
+            }
             execlp(user_input, user_input, (char *)NULL);
-            /*if excelp returns, it means the command was not found*/
-            perror("./shell: ");
+            /* If execlp returns, it means the command was not found */
+            perror("Error: Command not found");
             exit(EXIT_FAILURE);
         }
         else
         {
-            /*parent process*/
+            /* parent process */
             wait(&status);
         }
     }
-    return (0);
+    return 0;
 }
