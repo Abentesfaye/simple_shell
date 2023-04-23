@@ -86,4 +86,8 @@
  char *_getenv(const char *name, char **_environ);
  int _env(data_shell *datash);
  int exec_line(data_shell *datash);
+ char *read_line(int *i_eof);
+ void free_rvar_list(r_var **head);
+ r_var *add_rvar_node(r_var **head, int lvar, char *val, int lval);
 #endif
+
