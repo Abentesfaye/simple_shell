@@ -82,4 +82,7 @@
     int (*f)(datashell *datash)
  } builtin_t;
  
+ int cmp_env_name(const char *nenv, const *name);
+ char *_getenv(const char *name, char **_environ);
+ int _env(data_shell *datash);
 #endif
