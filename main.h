@@ -85,4 +85,5 @@
  int cmp_env_name(const char *nenv, const *name);
  char *_getenv(const char *name, char **_environ);
  int _env(data_shell *datash);
+ int exec_line(data_shell *datash);
 #endif
