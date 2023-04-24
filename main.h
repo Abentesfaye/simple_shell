@@ -94,6 +94,10 @@
  char *error_env(data_shell *datash);
  void aux_help_cd(void);
  void aux_help_alias(void);
- void aux_help(void)
+ void aux_help(void);
+ void free_line_list(line_list **head);
+ line_list *add_line_node_end(line_list **head, char *line);
+ void free_sep_list(sep_list **head);
+ sep_list *add_sep_node_end(sep_list **head, char sep);
 #endif
 
