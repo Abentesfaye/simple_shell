@@ -107,5 +107,35 @@
  int get_len(int n);
  char *aux_itoa(int n);
  int _atoi(char *s);
+ void cd_dot(data_shell *datash);
+ void cd_to(data_shell *datash);
+ void cd_previous(data_shell *datash);
+ void cd_to_home(data_shell *datash);
+ int repeated_char(char *input, int i);
+ int error_sep_op(char *input, int i, char last);
+ int first_char(char *input, int *i);
+ void print_syntax_error(data_shell *datash, char *input, int i, int bool);
+ int check_syntax_error(data_shell *datash, char *input);
+ void check_env(r_var **h, char *in, data_shell *data);
+ int check_vars(r_var **h, char *in, char *st, data_shell *data);
+ char *replaced_input(r_var **head, char *input, char *new_input, int nlen);
+ char *rep_var(char *input, data_shell *datash);
+ void rev_string(char *s);
+ void aux_help_env(void);
+ void aux_help_setenv(void);
+ void aux_help_unsetenv(void);
+ void aux_help_general(void);
+ void aux_help_exit(void);
+ int get_help(data_shell *datash);
+ int exit_shell(data_shell *datash);
+ int get_error(data_shell *datash, int eval);
+ char *copy_info(char *name, char *value);
+ void set_env(char *name, char *value, data_shell *datash);
+ int _setenv(data_shell *datash);
+ int _unsetenv(data_shell *datash);
+ int cmp_env_name(const char *nenv, const char *name);
+ char *_getenv(const char *name, char **_environ);
+ int _env(data_shell *datash);
+
 #endif
 
