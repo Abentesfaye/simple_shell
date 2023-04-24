@@ -92,5 +92,8 @@
  void rev_string(char *s);
  char *error_path_126(data_shell *datash);
  char *error_env(data_shell *datash);
+ void aux_help_cd(void);
+ void aux_help_alias(void);
+ void aux_help(void)
 #endif
 
