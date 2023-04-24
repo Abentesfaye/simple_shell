@@ -104,5 +104,8 @@
  char *error_exit_shell(data_shell *datash);
  char *error_not_found(data_shell datash);
  char *strcat_cd(data_shell *datash, char *msg, char *error, char *ver_str);
+ int get_len(int n);
+ char *aux_itoa(int n);
+ int _atoi(char *s);
 #endif
 
