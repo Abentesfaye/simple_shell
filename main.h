@@ -90,5 +90,7 @@
  void free_rvar_list(r_var **head);
  r_var *add_rvar_node(r_var **head, int lvar, char *val, int lval);
  void rev_string(char *s);
+ char *error_path_126(data_shell *datash);
+ char *error_env(data_shell *datash);
 #endif
 
