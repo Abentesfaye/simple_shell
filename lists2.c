@@ -58,5 +58,8 @@ void free_rvar_list(r_var **head)
 		}
 		*head = NULL;
 	}
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6fc2b98c03a5e6a7cc7328810bac970c903b2eac
 }
