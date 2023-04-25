@@ -172,6 +172,5 @@ int check_syntax_error(data_shell *datash, char *input)
 		print_syntax_error(datash, input, begin + i, 1);
 		return (1);
 	}
-
 	return (0);
 }
