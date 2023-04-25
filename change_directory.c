@@ -162,4 +162,8 @@ void cd_to_home(data_shell *datash)
 	set_env("PWD", home, datash);
 	free(p_pwd);
 	datash->status = 0;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8a30b6f5210151f45b4b6e1ba25e7c66d2b468ae
 }

@@ -24,4 +24,8 @@ int (*get_builtin(char *cmd))(data_shell *)
 			break;
 	}
 	return (builtin[i].f);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8a30b6f5210151f45b4b6e1ba25e7c66d2b468ae
 }
