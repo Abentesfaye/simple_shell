@@ -21,7 +21,7 @@ int (*get_builtin(char *cmd))(data_shell *)
 	
 	for (i = 0; builtin[i].name; i++)
 	{
-		if (strcmp(builtin[i].name, cmd) == 0)
+		if (_strcmp(builtin[i].name, cmd) == 0)
 			break;
 	}
 	return (builtin[i].f);

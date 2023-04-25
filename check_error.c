@@ -95,7 +95,7 @@ int first_char(char *input, int *i)
  */
 void print_syntax_error(data_shell *datash, char *input, int i, int boo)
 {
-	char *msg, *msg2, 8msg3, *error, *counter;
+	char *msg, *msg2, *msg3, *error, *counter;
 	int length;
 
 	if (input[i] == ';')
@@ -115,8 +115,8 @@ void print_syntax_error(data_shell *datash, char *input, int i, int boo)
 	msg2 = ": Syntax error: \"";
 	msg3 = "\" unexpected\n";
 	counter = aux_itoa(datash->counter);
-	length = strlen(datash->av[0]) + strlen(counter);
-	length += strlen(msg) + strlen(msg2) + strlen(msg3) + 2;
+	length = _strlen(datash->av[0]) + _strlen(counter);
+	length += _strlen(msg) + _strlen(msg2) + _strlen(msg3) + 2;
 
 	error = malloc(sizeof(char) * (length + 1));
 	if (error == 0)
@@ -124,13 +124,13 @@ void print_syntax_error(data_shell *datash, char *input, int i, int boo)
 		free(counter);
 		return;
 	}
-	strcpy(error, datash->av[0]);
-	strcat(error, ": ");
-	strcat(error, counter);
-	strcat(error, msg2);
-	strcat(error, msg);
-	strcat(error, msg3);
-	strcat(error, "\0");
+	_strcpy(error, datash->av[0]);
+	_strcat(error, ": ");
+	_strcat(error, counter);
+	_strcat(error, msg2);
+	_strcat(error, msg);
+	_strcat(error, msg3);
+	_strcat(error, "\0");
 
 	write(STDOUT_FILENO, error, length);
 	free(error);
