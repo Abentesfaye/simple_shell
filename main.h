@@ -228,4 +228,5 @@ void aux_help_cd(void);
 
 /* get_help.c */
 int get_help(data_shell *datash);
+
 #endif /* SHELL_H for the Simple shell program*/
