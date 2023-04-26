@@ -1,177 +1,205 @@
 #include "main.h"
 
 /**
- * repeated_char - counts the repetitions of a char
- *
- * @input: input string
- * @i: index
- * Return: repetitions
+ * is_cdir - checks ":" if is in the current directory.
+ * @path: type char pointer char.
+ * @i: type int pointer of index.
+ * Return: 1 if the path is searchable in the cd, 0 otherwise.
  */
-int repeated_char(char *input, int i)
+int is_cdir(char *path, int *i)
 {
-	if (*(input - 1) == *input)
-		return (repeated_char(input - 1, i + 1));
+	if (path[*i] == ':')
+		return (1);
 
-	return (i);
+	while (path[*i] != ':' && path[*i])
+	{
+		*i += 1;
+	}
+
+	if (path[*i])
+		*i += 1;
+
+	return (0);
 }
 
 /**
- * error_sep_op - finds syntax errors
+ * _which - locates a command
  *
- * @input: input string
- * @i: index
- * @last: last char read
- * Return: index of error. 0 when there are no
- * errors
+ * @cmd: command name
+ * @_environ: environment variable
+ * Return: location of the command.
  */
-int error_sep_op(char *input, int i, char last)
+char *_which(char *cmd, char **_environ)
 {
-	int count;
+	char *path, *ptr_path, *token_path, *dir;
+	int len_dir, len_cmd, i;
+	struct stat st;
 
-	count = 0;
-	if (*input == '\0')
+	path = _getenv("PATH", _environ);
+	if (path)
+	{
+		ptr_path = _strdup(path);
+		len_cmd = _strlen(cmd);
+		token_path = _strtok(ptr_path, ":");
+		i = 0;
+		while (token_path != NULL)
+		{
+			if (is_cdir(path, &i))
+				if (stat(cmd, &st) == 0)
+					return (cmd);
+			len_dir = _strlen(token_path);
+			dir = malloc(len_dir + len_cmd + 2);
+			_strcpy(dir, token_path);
+			_strcat(dir, "/");
+			_strcat(dir, cmd);
+			_strcat(dir, "\0");
+			if (stat(dir, &st) == 0)
+			{
+				free(ptr_path);
+				return (dir);
+			}
+			free(dir);
+			token_path = _strtok(NULL, ":");
+		}
+		free(ptr_path);
+		if (stat(cmd, &st) == 0)
+			return (cmd);
+		return (NULL);
+	}
+	if (cmd[0] == '/')
+		if (stat(cmd, &st) == 0)
+			return (cmd);
+	return (NULL);
+}
+
+/**
+ * is_executable - determines if is an executable
+ *
+ * @datash: data structure
+ * Return: 0 if is not an executable, other number if it does
+ */
+int is_executable(data_shell *datash)
+{
+	struct stat st;
+	int i;
+	char *input;
+
+	input = datash->args[0];
+	for (i = 0; input[i]; i++)
+	{
+		if (input[i] == '.')
+		{
+			if (input[i + 1] == '.')
+				return (0);
+			if (input[i + 1] == '/')
+				continue;
+			else
+				break;
+		}
+		else if (input[i] == '/' && i != 0)
+		{
+			if (input[i + 1] == '.')
+				continue;
+			i++;
+			break;
+		}
+		else
+			break;
+	}
+	if (i == 0)
 		return (0);
 
-	if (*input == ' ' || *input == '\t')
-		return (error_sep_op(input + 1, i + 1, last));
-
-	if (*input == ';')
-		if (last == '|' || last == '&' || last == ';')
-			return (i);
-
-	if (*input == '|')
+	if (stat(input + i, &st) == 0)
 	{
-		if (last == ';' || last == '&')
-			return (i);
-
-		if (last == '|')
-		{
-			count = repeated_char(input, 0);
-			if (count == 0 || count > 1)
-				return (i);
-		}
+		return (i);
 	}
-
-	if (*input == '&')
-	{
-		if (last == ';' || last == '|')
-			return (i);
-
-		if (last == '&')
-		{
-			count = repeated_char(input, 0);
-			if (count == 0 || count > 1)
-				return (i);
-		}
-	}
-
-	return (error_sep_op(input + 1, i + 1, *input));
+	get_error(datash, 127);
+	return (-1);
 }
 
 /**
- * first_char - finds index of the first char
+ * check_error_cmd - verifies if user has permissions to access
  *
- * @input: input string
- * @i: index
- * Return: 1 if there is an error. 0 in other case.
+ * @dir: destination directory
+ * @datash: data structure
+ * Return: 1 if there is an error, 0 if not
  */
-int first_char(char *input, int *i)
+int check_error_cmd(char *dir, data_shell *datash)
 {
-
-	for (*i = 0; input[*i]; *i += 1)
+	if (dir == NULL)
 	{
-		if (input[*i] == ' ' || input[*i] == '\t')
-			continue;
+		get_error(datash, 127);
+		return (1);
+	}
 
-		if (input[*i] == ';' || input[*i] == '|' || input[*i] == '&')
-			return (-1);
-
-		break;
+	if (_strcmp(datash->args[0], dir) != 0)
+	{
+		if (access(dir, X_OK) == -1)
+		{
+			get_error(datash, 126);
+			free(dir);
+			return (1);
+		}
+		free(dir);
+	}
+	else
+	{
+		if (access(datash->args[0], X_OK) == -1)
+		{
+			get_error(datash, 126);
+			return (1);
+		}
 	}
 
 	return (0);
 }
 
 /**
- * print_syntax_error - prints when a syntax error is found
+ * cmd_exec - executes command lines
  *
- * @datash: data structure
- * @input: input string
- * @i: index of the error
- * @bool: to control msg error
- * Return: no return
+ * @datash: data relevant (args and input)
+ * Return: 1 on success.
  */
-void print_syntax_error(data_shell *datash, char *input, int i, int bool)
+int cmd_exec(data_shell *datash)
 {
-	char *msg, *msg2, *msg3, *error, *counter;
-	int length;
+	pid_t pd;
+	pid_t wpd;
+	int state;
+	int exec;
+	char *dir;
+	(void) wpd;
 
-	if (input[i] == ';')
+	exec = is_executable(datash);
+	if (exec == -1)
+		return (1);
+	if (exec == 0)
 	{
-		if (bool == 0)
-			msg = (input[i + 1] == ';' ? ";;" : ";");
+		dir = _which(datash->args[0], datash->_environ);
+		if (check_error_cmd(dir, datash) == 1)
+			return (1);
+	}
+
+	pd = fork();
+	if (pd == 0)
+	{
+		if (exec == 0)
+			dir = _which(datash->args[0], datash->_environ);
 		else
-			msg = (input[i - 1] == ';' ? ";;" : ";");
+			dir = datash->args[0];
+		execve(dir + exec, datash->args, datash->_environ);
 	}
-
-	if (input[i] == '|')
-		msg = (input[i + 1] == '|' ? "||" : "|");
-
-	if (input[i] == '&')
-		msg = (input[i + 1] == '&' ? "&&" : "&");
-
-	msg2 = ": Syntax error: \"";
-	msg3 = "\" unexpected\n";
-	counter = aux_itoa(datash->counter);
-	length = _strlen(datash->av[0]) + _strlen(counter);
-	length += _strlen(msg) + _strlen(msg2) + _strlen(msg3) + 2;
-
-	error = malloc(sizeof(char) * (length + 1));
-	if (error == 0)
+	else if (pd < 0)
 	{
-		free(counter);
-		return;
-	}
-	_strcpy(error, datash->av[0]);
-	_strcat(error, ": ");
-	_strcat(error, counter);
-	_strcat(error, msg2);
-	_strcat(error, msg);
-	_strcat(error, msg3);
-	_strcat(error, "\0");
-
-	write(STDERR_FILENO, error, length);
-	free(error);
-	free(counter);
-}
-
-/**
- * check_syntax_error - intermediate function to
- * find and print a syntax error
- *
- * @datash: data structure
- * @input: input string
- * Return: 1 if there is an error. 0 in other case
- */
-int check_syntax_error(data_shell *datash, char *input)
-{
-	int begin = 0;
-	int f_char = 0;
-	int i = 0;
-
-	f_char = first_char(input, &begin);
-	if (f_char == -1)
-	{
-		print_syntax_error(datash, input, begin, 0);
+		perror(datash->av[0]);
 		return (1);
 	}
-
-	i = error_sep_op(input + begin, 0, *(input + begin));
-	if (i != 0)
+	else
 	{
-		print_syntax_error(datash, input, begin + i, 1);
-		return (1);
+		do {
+			wpd = waitpid(pd, &state, WUNTRACED);
+		} while (!WIFEXITED(state) && !WIFSIGNALED(state));
 	}
 
-	return (0);
+	datash->status = state / 256;
+	return (1);
 }
