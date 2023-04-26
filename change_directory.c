@@ -1,11 +1,11 @@
 #include "main.h"
 
 /**
- *cd_dot - changes to the parent directory
+ * cd_dot - changes to the parent directory
  *
- *@datash: data relevant (environ)
+ * @datash: data relevant (environ)
  *
- *Return: no return
+ * Return: no return
  */
 void cd_dot(data_shell *datash)
 {
@@ -33,6 +33,7 @@ void cd_dot(data_shell *datash)
 	if (cp_strtok_pwd != NULL)
 	{
 		cp_strtok_pwd = _strtok(NULL, "\0");
+
 		if (cp_strtok_pwd != NULL)
 			rev_string(cp_strtok_pwd);
 	}
@@ -51,10 +52,11 @@ void cd_dot(data_shell *datash)
 }
 
 /**
- *cd_to - change to given directory by the user
- *@datash: data relevant(dirctories)
+ * cd_to - changes to a directory given
+ * by the user
  *
- *Return: no return
+ * @datash: data relevant (directories)
+ * Return: no return
  */
 void cd_to(data_shell *datash)
 {
@@ -71,9 +73,9 @@ void cd_to(data_shell *datash)
 	}
 
 	cp_pwd = _strdup(pwd);
-	set_env("OLDPWD", cp_dir, datash);
+	set_env("OLDPWD", cp_pwd, datash);
 
-	cp_dir = strdup(dir);
+	cp_dir = _strdup(dir);
 	set_env("PWD", cp_dir, datash);
 
 	free(cp_pwd);
@@ -85,26 +87,28 @@ void cd_to(data_shell *datash)
 }
 
 /**
- *cd_previous - change to the previous directory
- *@datash: data relevant (environ)
- *Return: no return
+ * cd_previous - changes to the previous directory
+ *
+ * @datash: data relevant (environ)
+ * Return: no return
  */
-voi cd_previous(data_shell *datash)
+void cd_previous(data_shell *datash)
 {
 	char pwd[PATH_MAX];
-	char *p_pwd, *p_old, *cp_pwd, *cp_oldpwd;
+	char *p_pwd, *p_oldpwd, *cp_pwd, *cp_oldpwd;
 
 	getcwd(pwd, sizeof(pwd));
 	cp_pwd = _strdup(pwd);
 
-	p_old = _getenv("OLDPWD", datash->_environ);
+	p_oldpwd = _getenv("OLDPWD", datash->_environ);
 
 	if (p_oldpwd == NULL)
-	cp_oldpwd = cp_pwd;
+		cp_oldpwd = cp_pwd;
 	else
 		cp_oldpwd = _strdup(p_oldpwd);
 
 	set_env("OLDPWD", cp_pwd, datash);
+
 	if (chdir(cp_oldpwd) == -1)
 		set_env("PWD", cp_pwd, datash);
 	else
@@ -117,7 +121,7 @@ voi cd_previous(data_shell *datash)
 
 	free(cp_pwd);
 	if (p_oldpwd)
-		free(p_oldpwd);
+		free(cp_oldpwd);
 
 	datash->status = 0;
 
@@ -125,10 +129,10 @@ voi cd_previous(data_shell *datash)
 }
 
 /**
- *cd_to_home - change to home directory
- *@datash: data relevant (environ)
+ * cd_to_home - changes to home directory
  *
- *Retun: no return
+ * @datash: data relevant (environ)
+ * Return: no return
  */
 void cd_to_home(data_shell *datash)
 {
