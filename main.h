@@ -136,6 +136,15 @@
  int cmp_env_name(const char *nenv, const char *name);
  char *_getenv(const char *name, char **_environ);
  int _env(data_shell *datash);
-
+char *_strcat(char *dest, const char *src);
+char *_strcpy(char *dest, char *src);
+int _strcmp(char *s1, char *s2);
+char *_strchr(char *s, char c);
+int _strspn(char *s, char *accept);
+char *swap_char(char *input, int bool);
+void add_nodes(sep_list **head_s, line_list **head_l, char *input)l;
+void go_next(sep_list **list_s, line_list **list_l, data_shell *datash);
+int split_commands(data_shell *datash, char *input);
+char **split_line(char *input)
 #endif
 
