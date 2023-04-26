@@ -27,7 +27,7 @@ char *without_comment(char *in)
 
     if (up_to != 0)
     {
-        in = realloc(in, i, up_to + 1);
+        in = _realloc(in, i, up_to + 1);
         in[up_to] = '\0';
     }
 
@@ -62,7 +62,7 @@ void shell_loop(data_shell *datash)
                 continue;
             }
             input = rep_var(input, datash);
-            loop = split_commands(datash, input)
+            loop = split_commands(datash, input);
             datash->counter += 1;
             free(input);
         }

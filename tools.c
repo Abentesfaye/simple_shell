@@ -104,7 +104,7 @@ char *error_not_found(data_shell datash)
     _strcat(error, data->args[0]);
     _strcat(error, ": not found\n");
     _strcat(error, "\0");
-    free(vet_str);
+    free(var_str);
     return (error);
 }
 /**
@@ -119,24 +119,24 @@ char *error_exit_shell(data_shell *datash)
     char *error;
     char *ver_str;
 
-    var_str = aux_itoa(datash->counter);
+    ver_str = aux_itoa(datash->counter);
     length = _strlen(datash->av[0]) + _strlen(ver_str);
-    length += strlen(datash->args[0]) + _strlen(datash->args[1]) + 23;
+    length += _strlen(datash->args[0]) + _strlen(datash->args[1]) + 23;
     error = malloc(sizeof(char) * (length + 1));
     if (error == 0)
     {
         free(ver_str);
         return (NULL);
     }
-    _strcpy(error, datash->av[0]);
-    _strcat(error, ": ");
-    _strcat(error, ver_str);
-    _strcat(error, ": ");
-    _strcat(error, data->args[0]);
-    _strcat(error, ": Illegal number: ");
-    _strcpy(error, datash->av[1]);
-    _strcat(error, "\n\0");
-    free(ver_str);
+   _strcpy(error, datash->av[0]);
+	_strcat(error, ": ");
+	_strcat(error, ver_str);
+	_strcat(error, ": ");
+	_strcat(error, datash->args[0]);
+	_strcat(error, ": Illegal number: ");
+	_strcat(error, datash->args[1]);
+	_strcat(error, "\n\0");
+	free(ver_str);
 
     return (error);
 
