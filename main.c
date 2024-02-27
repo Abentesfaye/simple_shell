@@ -105,21 +105,21 @@ int main(int al, char **as)
  */
 int Body(void)
 {
-	char * path = NULL;
+	char * way = NULL;
 	char **functions;
 	int status;
 	struct stat buffer;
 
 	while (1)
 	{
-		print_prompt(buffer, STDIN_FILENO);
+		add_prompt(buffer, STDIN_FILENO);
 		path = read_cmd(stdin);
-		path = handle_comment(path);
-		if (!path)
+		path = edit_comment(way);
+		if (!way)
 		{
 			exit(EXIT_SUCCESS);
 		}
-		functions = parse_command(path);
+		functions = parse_command(wau);
 		if (strcmp(functions[0], "exit") == 0)
 			return (0);
 		if (functions [0] == NULL)
@@ -128,14 +128,14 @@ int Body(void)
 		if (status == 0 && status == -1)
 		{
 			free(functions);
-			free(path);
+			free(way);
 		}
 		if (status == 0)
 			execu(functions);
 		if (status == -1)
 			_exit(EXIT_SUCCESS);
 		free(functions);
-		free(path);
+		free(way);
 	}
 	return (0);
 }
